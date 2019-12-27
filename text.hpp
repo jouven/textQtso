@@ -10,7 +10,7 @@
 #include <vector>
 
 //the idea behind these classes
-//are to be used in libraries that don't know initially
+//is to be used in libraries that don't know initially
 //if a translation is required, but need to separate
 //the translatable text from the "values" which won't be translated
 //but at some point need to be merged-replace the text
@@ -27,7 +27,7 @@ class text_c
     bool translated_pri = false;
 
     //replace index start at 0 = "{0}"
-    //replacemens are applied in ascending index order first {0} then {1}...
+    //replacemens are applied in descending index order (last index is replaced, then last - 1... until {0})
     //a deque is used because recursion inserts the replacements in "reverse" (the last is the first inserted)
     std::deque<QString> replacements_pri;
 
@@ -172,10 +172,7 @@ public:
     }
     bool operator ==(const text_c& textBlock_par_con) const
     {
-        return text_pri.size() == textBlock_par_con.text_pri.size()
-                and replacements_pri.size() == textBlock_par_con.replacements_pri.size()
-                and translated_pri == textBlock_par_con.translated_pri
-                and rawReplace_f() == textBlock_par_con.rawReplace_f();
+        return rawReplace_f() == textBlock_par_con.rawReplace_f();
     }
     bool operator ==(const QString& string_par_con) const
     {
@@ -183,7 +180,7 @@ public:
     }
     bool operator not_eq(const text_c& textBlock_par_con) const
     {
-        return not text_c::operator==(textBlock_par_con);
+        return rawReplace_f() not_eq textBlock_par_con.rawReplace_f();
     }
     bool operator not_eq(const QString& string_par_con) const
     {
@@ -209,7 +206,6 @@ class textCompilation_c
 {
     std::vector<text_c> texts_pri;
 public:
-    //it isn't immutable like text_c
     textCompilation_c() = default;
     textCompilation_c(const std::vector<text_c>& texts_par_con);
 
