@@ -102,6 +102,35 @@ bool textCompilation_c::operator !=(const QString& string_par_con) const
     return toRawText_f() not_eq string_par_con;
 }
 
+void textCompilation_c::insertIndex_f(
+        const text_c& text_par_con
+        , const uint_fast64_t index_par_con)
+{
+    while (true)
+    {
+        if (index_par_con >= texts_pri.size())
+        {
+            append_f(text_par_con);
+            break;
+        }
+
+        if (index_par_con < texts_pri.size())
+        {
+            //get current last index
+            const uint_fast64_t lastIndexTmp_con(texts_pri.size() - 1);
+            //resize vector
+            texts_pri.resize(texts_pri.size() + 1);
+            //copy each index to index + 1
+            for (uint_fast64_t indexFromTheEnd_ite = lastIndexTmp_con; indexFromTheEnd_ite >= index_par_con; --indexFromTheEnd_ite)
+            {
+                texts_pri.at(indexFromTheEnd_ite + 1) = texts_pri.at(indexFromTheEnd_ite);
+            }
+            texts_pri.at(index_par_con) = text_par_con;
+            break;
+        }
+    }
+}
+
 bool textCompilation_c::operator !=(const textCompilation_c& textCompilation_par_con) const
 {
     return texts_pri not_eq textCompilation_par_con.texts_pri;

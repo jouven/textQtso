@@ -109,8 +109,15 @@ public:
             const QString& frontSeparator_par_con
             , const QString& backSeparator_par_con)
     {
-        frontSeparator_pri = frontSeparator_par_con;
-        backSeparator_pri = backSeparator_par_con;
+        if (frontSeparator_par_con.isEmpty() or backSeparator_pri.isEmpty())
+        {
+            //don't change them if any is set to empty
+        }
+        else
+        {
+            frontSeparator_pri = frontSeparator_par_con;
+            backSeparator_pri = backSeparator_par_con;
+        }
     }
 
     size_t rawTextSize_f() const
@@ -151,34 +158,36 @@ public:
                 {
                     resultTmp.replace(frontSeparator_pri + QString::number(index_ite) + backSeparator_pri, replacements_pri.at(index_ite));
                 }
-
             }
         }
         return resultTmp;
     }
     bool operator<(const text_c& textBlock_par_con) const
     {
-        return text_pri < textBlock_par_con.text_pri;
+        return rawReplace_f() < textBlock_par_con.rawReplace_f();
     }
     bool operator<(const QString& string_par_con) const
     {
-        return text_pri < string_par_con;
+        return rawReplace_f() < string_par_con;
     }
     bool operator ==(const text_c& textBlock_par_con) const
     {
-        return text_pri == textBlock_par_con.text_pri;
+        return text_pri.size() == textBlock_par_con.text_pri.size()
+                and replacements_pri.size() == textBlock_par_con.replacements_pri.size()
+                and translated_pri == textBlock_par_con.translated_pri
+                and rawReplace_f() == textBlock_par_con.rawReplace_f();
     }
     bool operator ==(const QString& string_par_con) const
     {
-        return text_pri == string_par_con;
+        return rawReplace_f() == string_par_con;
     }
     bool operator not_eq(const text_c& textBlock_par_con) const
     {
-        return text_pri not_eq textBlock_par_con.text_pri;
+        return not text_c::operator==(textBlock_par_con);
     }
     bool operator not_eq(const QString& string_par_con) const
     {
-        return text_pri not_eq string_par_con;
+        return not text_c::operator==(string_par_con);
     }
     bool translated_f() const
     {
@@ -226,6 +235,13 @@ public:
     bool operator ==(const QString& string_par_con) const;
     bool operator not_eq(const textCompilation_c& textCompilation_par_con) const;
     bool operator not_eq(const QString& string_par_con) const;
+
+    //insert at index
+    //if larger than any existing index it will insert at the last position
+    //else it will copy all the text_c from that index to index+1 and insert the text_c to the index
+    //can't be negative =)
+    //sub-optimal, it "moves" all the existing values in the vector from that index (included) to the end then replaces the index
+    void insertIndex_f(const text_c& text_par_con, const uint_fast64_t index_par_con);
 };
 
 bool isValidStringSize_f(
