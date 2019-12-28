@@ -1,6 +1,8 @@
 #ifndef TRANSLATATORJSONQTSO_TEXT_HPP
 #define TRANSLATATORJSONQTSO_TEXT_HPP
 
+#include "crossPlatformMacros.hpp"
+
 #include <QString>
 #ifdef DEBUGJOUVEN
 #include <QDebug>
@@ -15,7 +17,7 @@
 //the translatable text from the "values" which won't be translated
 //but at some point need to be merged-replace the text
 //to make a meaningful message
-class text_c
+class EXPIMP_TEXTQTSO text_c
 {
     QString text_pri;
 
@@ -202,7 +204,7 @@ public:
 
 
 //several texts (i.e. error texts from different errors)
-class textCompilation_c
+class EXPIMP_TEXTQTSO textCompilation_c
 {
     std::vector<text_c> texts_pri;
 public:
@@ -240,7 +242,7 @@ public:
     void insertIndex_f(const text_c& text_par_con, const uint_fast64_t index_par_con);
 };
 
-bool isValidStringSize_f(
+bool EXPIMP_TEXTQTSO isValidStringSize_f(
         const QString& str_par_con
         , const int_fast32_t maxSize_par_con
         //where the error message will be assigned (if not nullptr)
