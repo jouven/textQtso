@@ -40,7 +40,8 @@ class EXPIMP_TEXTQTSO text_c
 #endif
         replacements_pri.emplace_front(string_par_con);
     }
-    void addReplacement_f(const int_fast64_t int_par_con)
+    template<typename T>
+    void addReplacement_f(const T int_par_con)
     {
 #ifdef DEBUGJOUVEN
         //qDebug() << "int_par_con " << int_par_con << endl;
