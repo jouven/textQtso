@@ -3,6 +3,7 @@ C++ library to deal with string/s, that might be translated at some point in tim
 
 Compilation
 -----------
+Requires Qt library
 
 Run (in textQtso source directory or pointing to it):
 
