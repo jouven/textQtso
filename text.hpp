@@ -211,6 +211,7 @@ class EXPIMP_TEXTQTSO textCompilation_c
 public:
     textCompilation_c() = default;
     explicit textCompilation_c(const std::vector<text_c>& texts_par_con);
+    explicit textCompilation_c(const text_c& text_par_con);
 
     void append_f(const text_c& text_par_con);
     void append_f(const textCompilation_c& textCompilationSource_par_con);

@@ -4,6 +4,11 @@ textCompilation_c::textCompilation_c(const std::vector<text_c>& texts_par_con)
     : texts_pri(texts_par_con)
 {}
 
+textCompilation_c::textCompilation_c(const text_c& text_par_con)
+{
+    texts_pri.emplace_back(text_par_con);
+}
+
 void textCompilation_c::append_f(const text_c& text_par_con)
 {
     texts_pri.emplace_back(text_par_con);
