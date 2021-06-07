@@ -1,5 +1,9 @@
 #include "text.hpp"
 
+textCompilation_c::textCompilation_c(const bool addNewLineBetweenTextOnStringReturn_par_con)
+    : addNewLineBetweenTextOnStringReturn_pri(addNewLineBetweenTextOnStringReturn_par_con)
+{}
+
 textCompilation_c::textCompilation_c(const std::vector<text_c>& texts_par_con)
     : texts_pri(texts_par_con)
 {}
@@ -44,9 +48,20 @@ bool textCompilation_c::remove_f(const size_t index_par_con)
 QString textCompilation_c::toRawText_f() const
 {
     QString resultTmp;
-    for (const text_c& text_ite_con : texts_pri)
+    if (not texts_pri.empty())
     {
-        resultTmp.append(text_ite_con.rawText_f());
+        for (const text_c& text_ite_con : texts_pri)
+        {
+            resultTmp.append(text_ite_con.rawText_f());
+            if (addNewLineBetweenTextOnStringReturn_pri)
+            {
+                resultTmp.append('\n');
+            }
+        }
+        if (addNewLineBetweenTextOnStringReturn_pri)
+        {
+            resultTmp.chop(1);
+        }
     }
     return resultTmp;
 }
@@ -54,19 +69,34 @@ QString textCompilation_c::toRawText_f() const
 QString textCompilation_c::toRawReplace_f(std::vector<std::vector<size_t>>* failReplaceIndexesPtr_par) const
 {
     QString resultTmp;
-    if (failReplaceIndexesPtr_par not_eq nullptr)
+    if (not texts_pri.empty())
     {
-        failReplaceIndexesPtr_par->resize(texts_pri.size());
-        for (size_t i = 0, l = texts_pri.size(); i < l; ++i)
+        if (failReplaceIndexesPtr_par not_eq nullptr)
         {
-            resultTmp.append(texts_pri.at(i).rawReplace_f(nullptr, std::addressof(failReplaceIndexesPtr_par->at(i))));
+            failReplaceIndexesPtr_par->resize(texts_pri.size());
+            for (size_t i = 0, l = texts_pri.size(); i < l; ++i)
+            {
+                resultTmp.append(texts_pri.at(i).rawReplace_f(nullptr, std::addressof(failReplaceIndexesPtr_par->at(i))));
+                if (addNewLineBetweenTextOnStringReturn_pri)
+                {
+                    resultTmp.append('\n');
+                }
+            }
         }
-    }
-    else
-    {
-        for (size_t i = 0, l = texts_pri.size(); i < l; ++i)
+        else
         {
-            resultTmp.append(texts_pri.at(i).rawReplace_f());
+            for (size_t i = 0, l = texts_pri.size(); i < l; ++i)
+            {
+                resultTmp.append(texts_pri.at(i).rawReplace_f());
+                if (addNewLineBetweenTextOnStringReturn_pri)
+                {
+                    resultTmp.append('\n');
+                }
+            }
+        }
+        if (addNewLineBetweenTextOnStringReturn_pri)
+        {
+            resultTmp.chop(1);
         }
     }
     return resultTmp;

@@ -201,6 +201,47 @@ public:
     {
         return text_pri.isEmpty();
     }
+    //the first replacement position, in the rawReplace_f function, is the last to be replaced
+    void addFrontReplacement_f(const QString& value_par_con)
+    {
+        replacements_pri.emplace_front(value_par_con);
+    }
+    //the last replacement position, in the rawReplace_f function, is the first to be replaced
+    void addBackReplacement_f(const QString& value_par_con)
+    {
+        replacements_pri.emplace_back(value_par_con);
+    }
+    QString replacementValue_f(const size_t index_par_con, const QString& defaultValue_par_con = QString()) const
+    {
+        QString resultTmp(defaultValue_par_con);
+        if(index_par_con >= replacements_pri.size())
+        {
+            //wrong position
+        }
+        else
+        {
+            resultTmp = replacements_pri.at(index_par_con);
+        }
+        return resultTmp;
+    }
+    bool setReplacement_f(const QString& value_par_con, const size_t index_par_con)
+    {
+        bool resulTmp(false);
+        while (true)
+        {
+            if(index_par_con >= replacements_pri.size())
+            {
+                //wrong position to set
+                break;
+            }
+
+            replacements_pri[index_par_con] = value_par_con;
+
+            resulTmp = true;
+            break;
+        }
+        return resulTmp;
+    }
 };
 
 
@@ -208,8 +249,11 @@ public:
 class EXPIMP_TEXTQTSO textCompilation_c
 {
     std::vector<text_c> texts_pri;
+    //this adds '\n' between text_c when outputting the whole vector to string
+    //affects toRawText_f and toRawReplace_f
+    bool addNewLineBetweenTextOnStringReturn_pri = false;
 public:
-    textCompilation_c() = default;
+    explicit textCompilation_c(const bool addNewLineBetweenTextOnStringReturn_par_con = false);
     explicit textCompilation_c(const std::vector<text_c>& texts_par_con);
     explicit textCompilation_c(const text_c& text_par_con);
 
@@ -244,7 +288,7 @@ public:
     void insertIndex_f(const text_c& text_par_con, const uint_fast64_t index_par_con);
 };
 
-bool EXPIMP_TEXTQTSO isValidStringSize_f(
+extern bool EXPIMP_TEXTQTSO isValidStringSize_f(
         const QString& str_par_con
         , const int_fast32_t maxSize_par_con
         //where the error message will be assigned (if not nullptr)
