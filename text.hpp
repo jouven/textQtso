@@ -61,6 +61,7 @@ class EXPIMP_TEXTQTSO text_c
         addReplacement_f(value_par);
     }
 
+    //there is no recursive version with only one argument because it conflicts with 1 argument-non-recursive versions (the function above)
     template<typename T, typename... Rargs>
     void addReplacementRec_f(T value_par, Rargs... rargs)
     {
@@ -87,6 +88,7 @@ public:
     }
 
     //First argument is always the text and is mandatory, everything after are replacement values
+    //beware when dealing with bool type replacements, they are converted to int (true=1, false=0)
     template<typename T, typename... Rargs>
     text_c(T value_par, Rargs... rargs)
         : text_pri(value_par)
@@ -95,6 +97,15 @@ public:
         //qDebug() << "template ctor value_par " << value_par << endl;
         //qDebug() << "template ctor sizeof... (Fargs) " << sizeof... (Fargs) << endl;
 #endif
+        //the way this recursion works is:
+        //for one argument it enters the ctor above
+        //for two or more it goes here, and the way recursion works the last replacement argument is the first one
+        //to be inserted in replacements_pri, because the recursion first goes down all the nested calls which results in a call
+        //to the:
+        //template<typename T>
+        //void addReplacementRec_f(T value_par)
+        //with the last argument (of the initial ctor call)
+        //and then goes up doing one addReplacement_f call per each previous argument (from the last)
         addReplacementRec_f(rargs...);
 
         //WRONG, creates a temporary class
